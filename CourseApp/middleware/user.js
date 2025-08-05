@@ -1,12 +1,10 @@
-const {user} = require('../db/db');
-async function userMiddleware(req,res,next){
-    const username = req.headers.username;
-    const password = req.headers.password;
-
-    try{
-        const userinfo = await user.findOne({username:username,password:password});
-        if(!userinfo)throw('no user found')
-    }catch(err){console.log(err);res.status(403).send('no user found');}
+jwt = require('jsonwebtoken');
+function userMiddleware(req, res, next) {
+    let token = req.headers.authorization;
+    token = token.split(' ');
+    token = token[1];
+    const verifyUser = jwt.verify(token, "YeGaanaHaiSazaEmaut");
+    if (!verifyUser.username) return res.send("Couldn't get user").status(404);
     next();
 }
 module.exports = userMiddleware;

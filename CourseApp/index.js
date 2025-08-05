@@ -1,16 +1,18 @@
 const express = require('express');
-const app = express();
+let app = express();
 app.use(express.json());
-const adminRouter = require('./routes/admin');
-const userRouter = require('./routes/user');
+const userRoute = require('./route/user');
+const adminRoute = require('./route/admin');
 
-app.use(express.json());
-app.use('/admin',adminRouter);
-app.use('/user',userRouter);
+app.use('/user', userRoute);
+app.use('/admin', adminRoute);
 
-app.listen(3000,()=>console.log('hogya bhai'));
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(403).send('invalid data');
+})
+app.listen(3000, () => console.log('hogya'));
 
-// a lot of zod shit , and more protection is needed 
-/*
-Eg. when creating a user or admin, bullshit json doesn't give error it just creates user or admin with id only
-*/
+// if you are exception handling make sure you return res.send , with only res.send code continous apparently 
+// idk exactly know why , but just be on the safe side
+// i still dont get how purchasedCourses works

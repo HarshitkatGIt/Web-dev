@@ -1,14 +1,15 @@
-const { admin } = require('../db/db');
-async function adminMiddleware(req, res, next) {
-    const username = req.headers.username;
-    const password = req.headers.password;
+const jwt = require('jsonwebtoken');
+function adminMiddleware(req, res, next) {
+    let token = req.headers.authorization;
+    token = token.split(' ');
+    token = token[1];
+    console.log(token)
 
     try {
-        admininfo = await admin.findOne({ username: username, password: password });
-        if(!admininfo)throw('no admin found');
-        console.log(admininfo);next();
+        const verifyAdmin = jwt.verify(token, "TooManySnakesToBlame");
+        if (verifyAdmin.username) next();
     }
-    catch (err) { console.log(err); res.status(403).send('no admin found');};
-    
+    catch (err) { console.log(err); return res.send("can't verify admin").status(404); }
 }
+
 module.exports = adminMiddleware;

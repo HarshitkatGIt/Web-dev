@@ -4,14 +4,18 @@ import CreateTodo from './CreateTodo'
 import Todo from './Todo'
 import './App.css'
 
-function App() {
+function useTodos() {
   const [todo, setTodo] = useState([])
-  const fetchtodos = async () => {
+  const fetchtodoss = async () => {
     const response = await fetch('http://localhost:3000/todos', { method: 'GET' });
     const ans = await response.json();
     setTodo(ans.todo);
   }
-  useEffect(() => { fetchtodos() }, [])
+  useEffect(() => { fetchtodoss() }, []);
+  return [todo, fetchtodoss];
+}
+function App() {
+  const [todo, fetchtodos] = useTodos();
   return (
     <>
       <CreateTodo fetchtodos={fetchtodos}></CreateTodo>
